@@ -20,8 +20,6 @@ class MyRobot(wpilib.IterativeRobot):
     
     
     def robotInit(self):
-        '''Robot initialization function'''
-        
         if not wpilib.RobotBase.isSimulation():
             import ctre
             
@@ -36,14 +34,11 @@ class MyRobot(wpilib.IterativeRobot):
             self.FRC = wpilib.Talon(self.frontRightChannel)
             self.FLC = wpilib.Talon(self.frontLeftChannel)
         
-        self.stick = wpilib.Joystick(self.joystickChannel)
+        self.controller = wpilib.Joystick(self.joystickChannel)
         self.winch_motor1 = wpilib.Talon(7)
         self.winch_motor2 = wpilib.Talon(8)
         
-        self.robotDrive = wpilib.RobotDrive(self.FLC,
-                                            self.RLC,
-                                            self.FRC,
-                                            self.RRC)
+        self.robotDrive = wpilib.RobotDrive(self.FLC, self.RLC, self.FRC, self.RRC)
                                             
         wpilib.CameraServer.launch()
         
@@ -55,20 +50,20 @@ class MyRobot(wpilib.IterativeRobot):
         self.robotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, True)
                                             
                         
-        self.winch_forward = wpilib.buttons.JoystickButton(self.stick, 5)
-        self.winch_backward = wpilib.buttons.JoystickButton(self.stick, 6)
+        self.winch_forward = wpilib.buttons.JoystickButton(self.controller, 5)
+        self.winch_backward = wpilib.buttons.JoystickButton(self.controller, 6)
                                             
-        self.flip = wpilib.buttons.JoystickButton(self.stick, 1)
-        self.open_double = wpilib.buttons.JoystickButton(self.stick, 3)
-        self.close_double = wpilib.buttons.JoystickButton(self.stick, 4)
+        self.flip = wpilib.buttons.JoystickButton(self.controller, 1)
+        self.open_double = wpilib.buttons.JoystickButton(self.controller, 3)
+        self.close_double = wpilib.buttons.JoystickButton(self.controller, 4)
                                             
         self.single_solenoid = wpilib.Solenoid(1)
         self.double_solenoid = wpilib.DoubleSolenoid(2,3)
         
         self.dm = 2
 
-        self.xboxMec = wpilib.buttons.JoystickButton(self.stick, 8)
-        self.xboxTank = wpilib.buttons.JoystickButton(self.stick, 7)
+        self.xboxMec = wpilib.buttons.JoystickButton(self.controller, 8)
+        self.xboxTank = wpilib.buttons.JoystickButton(self.controller, 7)
 
 
 
@@ -91,9 +86,9 @@ class MyRobot(wpilib.IterativeRobot):
         if self.xboxTank.get():
             self.dm = 2
         if self.dm == 1:
-            self.robotDrive.mecanumDrive_Cartesian(self.stick.getX(), self.stick.getY(), self.stick.getRawAxis(4), 0)
+            self.robotDrive.mecanumDrive_Cartesian(self.controller.getX(), self.controller.getY(), self.controller.getRawAxis(4), 0)
         if self.dm == 2:
-            self.robotDrive.tankDrive(self.stick.getY(), self.stick.getRawAxis(5), True)
+            self.robotDrive.tankDrive(self.controller.getY(), self.controller.getRawAxis(5), True)
 
 
         if (self.winch_forward.get()):
