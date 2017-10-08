@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Example Dash</title>
+  <meta name="viewport" content="width=device-width">
+  <style>
+
+    body{
+    background-image: url(http://10.44.80.2:1181/stream.mjpg); /*put address of webcam stream */
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    }
+
+  </style>
+</head>
+
+<body>
+
+
+  <div id="AutoTitle">
+    Auto:
+  </div>
+
+  <select id="autonomous" style="font-size:20px"></select>
+
+    <script src="jquery-2.2.2.min.js"></script>
+    <script src="raphael-2.1.4.min.js"></script>
+    <script src="d3.min.js"></script>
+    <script src="/networktables/networktables.js"></script>
+    <script src="/networktables/utils.js"></script>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+    attachSelectToSendableChooser("#autonomous", "/SmartDashboard/Autonomous Mode");
+    });
+
+    NetworkTables.addWsConnectionListener(function(connected){
+            console.log("Websocket connected: " + connected);
+        }, true);
+
+
+  </script>
+
+</body>
+
+</html>
