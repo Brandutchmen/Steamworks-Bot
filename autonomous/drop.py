@@ -18,9 +18,13 @@ class DriveForward(StatefulAutonomous):
     def drop(self):
         self.gearDrop.set(wpilib.DoubleSolenoid.Value.kForward)
         self.drive.arcadeDrive(0, 0)
-    @timed_state(duration=0.5, next_state='stop')
+    @timed_state(duration=0.5, next_state='close')
     def reverse(self):
         self.drive.arcadeDrive(-0.5, 0)
+    @timed_state(duration=0.5, next_state='stop')
+    def close(self):
+        self.gearDrop.set(wpilib.DoubleSolenoid.Value.kReverse)
+        self.drive.arcadeDrive(0, 0)
     @state()
     def stop(self):
         self.drive.arcadeDrive(0,0,0)

@@ -5,7 +5,6 @@
 #
 #
 
-
 import wpilib
 
 from wpilib import RobotDrive
@@ -44,8 +43,8 @@ class MyRobot(wpilib.IterativeRobot):
         self.robotDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, True)
         self.robotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, True)
 
-        self.winch_forward = wpilib.buttons.JoystickButton(self.controller, 5)
-        self.winch_backward = wpilib.buttons.JoystickButton(self.controller, 6)
+        self.winch_forward = wpilib.buttons.JoystickButton(self.controller, 6)
+        self.winch_backward = wpilib.buttons.JoystickButton(self.controller, 5)
         self.paddleGet = wpilib.buttons.JoystickButton(self.controller, 1)
         self.gearDrop = wpilib.buttons.JoystickButton(self.controller, 3)
         self.closeGear = wpilib.buttons.JoystickButton(self.controller, 4)
