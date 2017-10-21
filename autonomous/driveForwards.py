@@ -11,20 +11,20 @@ class DriveForward(StatefulAutonomous):
     @timed_state(duration=0.5, next_state='drive_forward', first=True)
     def drive_wait(self):
         """
-            Waits .5 seconds. Not necessary, but sometimes sensors are not ready right away
+            Waits .5 seconds. Not necessary, But sometimes sensors are not ready right away
             """
-        self.drive.arcadeDrive(0,0)
+        self.drive.mecanumDrive_Cartesian(0, 0, 0, 0)
 
-    @timed_state(duration=4, next_state='stop')
+    @timed_state(duration=1.5, next_state='stop')
     def drive_forward(self):
         """
             Drives forward for 4 seconds
             """
-        self.drive.arcadeDrive(0.5, 0)
+        self.drive.mecanumDrive_Cartesian(-.5, 0, 0, 0)
     
     @state()
     def stop(self):
         """
             Stop until auto ends
             """
-        self.drive.arcadeDrive(0,0,0)
+        self.drive.mecanumDrive_Cartesian(0, 0, 0, 0)
