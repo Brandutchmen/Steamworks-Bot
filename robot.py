@@ -28,21 +28,21 @@ class MyRobot(wpilib.IterativeRobot):
 
         if not wpilib.RobotBase.isSimulation():#This makes simulator show motor outputs for debugging
             import ctre
+            self.RLC = ctre.CANTalon(self.rLeftChannel)
             self.FLC = ctre.CANTalon(self.fLeftChannel)
             self.FRC = ctre.CANTalon(self.fRightChannel)
             self.RRC = ctre.CANTalon(self.rRightChannel)
-            self.RLC = ctre.CANTalon(self.rLeftChannel)
         else:
-            self.RRC = wpilib.Talon(self.rRightChannel)
             self.RLC = wpilib.Talon(self.rLeftChannel)
-            self.FRC = wpilib.Talon(self.fRightChannel)
             self.FLC = wpilib.Talon(self.fLeftChannel)
+            self.FRC = wpilib.Talon(self.fRightChannel)
+            self.RRC = wpilib.Talon(self.rRightChannel)
 
 
         wpilib.CameraServer.launch() #Goto 10.44.80.2:1181 to view the cameras without HTML page
 
 
-        self.robotDrive = wpilib.RobotDrive(self.FLC, self.RLC, self.FRC, self.RRC)#Sets motors for robotDrive commands
+        self.robotDrive = wpilib.RobotDrive(self.RLC, self.FLC, self.FRC, self.RRC)#Sets motors for robotDrive commands
         self.robotDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, True)
         self.robotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, True)
 
@@ -63,13 +63,16 @@ class MyRobot(wpilib.IterativeRobot):
         self.gear = wpilib.DoubleSolenoid(2,3)
         self.ultrasonic = wpilib.Ultrasonic(5, 4) #trigger to echo
         self.ultrasonic.setAutomaticMode(True)
-        
+
+
+        self.navx = navx.AHRS.create_spi()
         
         #Auto mode variables
         self.components = {
             'drive': self.robotDrive,
             'gearDrop': self.gear,
-            'ultrasonic': self.ultrasonic
+            'ultrasonic': self.ultrasonic,
+            'navx': self.navx
         }
         self.automodes = AutonomousModeSelector('autonomous', self.components)
 
@@ -81,7 +84,7 @@ class MyRobot(wpilib.IterativeRobot):
     def teleopPeriodic(self):
         
         
-        ###  Climing code
+        ###  Climbing code
         if (self.winch_backward.get()):
             self.winch_motor1.set(-1*self.controller.getRawAxis(2))
             self.winch_motor2.set(-1*self.controller.getRawAxis(2))
@@ -127,7 +130,7 @@ if __name__ == '__main__':
     def robotInit(self):
         #self.winch_forward = wpilib.buttons.JoystickButton(self.controller, 6)
         #self.closeGear = wpilib.buttons.JoystickButton(self.controller, 4)
-        #self.navx = navx.AHRS.create_spi()
+    
         #self.dm = 1
         
 

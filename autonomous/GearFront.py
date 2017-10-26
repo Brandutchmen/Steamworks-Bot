@@ -5,10 +5,23 @@ class DriveForward(StatefulAutonomous):
     MODE_NAME = 'Gear Front'
 
     def initialize(self):
-        pass
+        kP = 0.01
+        kI = 0.0001
+        
+        turnController = wpilib.PIDController(kP, kI, 0, 0, self.navx, output=self)
+        turnController.setInputRange(-180.0,  180.0)
+        turnController.setOutputRange(-.5, .5)
+        turnController.setContinuous(True)
+        self.turnController = turnController
+
+    def pidWrite(self, output):
+        
+        self.rotation = output
 
     @timed_state(duration=0.5, next_state='toPeg', first=True)
     def drive_wait(self):
+        self.turnController.setSetpoint(self.navx.getYaw())
+        self.turnController.enable()
         self.gearDrop.set(False)
         self.drive.mecanumDrive_Cartesian(0,0,0,0) #Strafe Left, Forward Back, Strafe Right, Intensity)
         
@@ -54,5 +67,5 @@ class DriveForward(StatefulAutonomous):
     @state()
     def stop(self):
         self.drive.mecanumDrive_Cartesian(0,0,0,0)
-
+        self.turnController.disable()
 
