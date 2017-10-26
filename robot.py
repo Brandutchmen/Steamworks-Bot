@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-'''
-"Wall-E" Team 4480 Robot Code for the FRC 2017 Competition "Steamworks"
-Written by Brandon Young and Kennedy Allen for Team 4480 UCBotics
-'''
+#"Wall-E" Team 4480 Robot Code for the FRC 2017 Competition "Steamworks"
+#Written by Brandon Young and Kennedy Allen for Team 4480 UCBotics
+#
+#
+#
+
 import wpilib
 from wpilib import RobotDrive
 import wpilib.buttons
