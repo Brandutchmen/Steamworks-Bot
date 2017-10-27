@@ -25,7 +25,10 @@ class MyRobot(wpilib.IterativeRobot):
     
     def robotInit(self):
        
-
+       
+        wpilib.CameraServer.launch('misc/vision.py:main')
+        
+        
         if not wpilib.RobotBase.isSimulation():#This makes simulator show motor outputs for debugging
             import ctre
             self.RLC = ctre.CANTalon(self.rLeftChannel)
@@ -39,10 +42,8 @@ class MyRobot(wpilib.IterativeRobot):
             self.RRC = wpilib.Talon(self.rRightChannel)
 
 
-        self.robotDrive = wpilib.RobotDrive(self.RLC, self.RRC, self.FRC, self.RLC)#Sets motors for robotDrive commands
-        self.robotDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, True)
-        self.robotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, True)
-
+        self.robotDrive = wpilib.RobotDrive(self.RLC, self.RRC, self.FRC, self.FLC)#Sets motors for robotDrive commands
+        
 
         #Controller Input Variables
         self.controller = wpilib.Joystick(self.joystickChannel)
@@ -109,7 +110,7 @@ class MyRobot(wpilib.IterativeRobot):
 
 
         #RobotDrive Code
-        self.robotDrive.mecanumDrive_Cartesian(self.controller.getY(),self.controller.getX(), -1*self.controller.getRawAxis(4), 0)
+        self.robotDrive.mecanumDrive_Cartesian(-1*self.controller.getY(),-1*self.controller.getRawAxis(4),self.controller.getX(), 0)
 
 
 if __name__ == '__main__':

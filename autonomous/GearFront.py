@@ -7,15 +7,16 @@ class DriveForward(StatefulAutonomous):
     def initialize(self):
         kP = 0.01
         kI = 0.0001
-        
+
         turnController = wpilib.PIDController(kP, kI, 0, 0, self.navx, output=self)
         turnController.setInputRange(-180.0,  180.0)
         turnController.setOutputRange(-.5, .5)
         turnController.setContinuous(True)
         self.turnController = turnController
+        self.rotation = 0
 
     def pidWrite(self, output):
-        
+
         self.rotation = output
 
     @timed_state(duration=0.5, next_state='toPeg', first=True)
@@ -23,8 +24,8 @@ class DriveForward(StatefulAutonomous):
         self.turnController.setSetpoint(self.navx.getYaw())
         self.turnController.enable()
         self.gearDrop.set(False)
-        self.drive.mecanumDrive_Cartesian(0,0,0,0) #Strafe Left, Forward Back, Strafe Right, Intensity)
-        
+        self.drive.mecanumDrive_Cartesian(0,0,self.rotation, 0) #Strafe Left/Right, Forward Back, rotate, gyro angle
+
 
     @timed_state(duration=4, next_state="OpenJaws")
     def toPeg(self):
@@ -32,40 +33,32 @@ class DriveForward(StatefulAutonomous):
         if self.ultrasonic.getRangeInches()<9:
             self.next_state("OpenJaws")
         else:
-            self.drive.mecanumDrive_Cartesian(0,-1,0,.3)
+            self.drive.mecanumDrive_Cartesian(0,-.23, self.rotation, 0)
         print (self.ultrasonic.getRangeInches())
 
     @timed_state(duration=.6, next_state="openUp")
     def OpenJaws(self):
         self.gearDrop.set(True)
-        self.drive.mecanumDrive_Cartesian(0,0,0,0)
-        
+        self.drive.mecanumDrive_Cartesian(0,0, self.rotation, 0)
+
 
     @timed_state(duration=1, next_state="pushGear")
     def openUp(self):
         self.gearDrop.set(True)
-        self.drive.mecanumDrive_Cartesian(0,0,0,0)
-        
-        
+        self.drive.mecanumDrive_Cartesian(0,0, self.rotation, 0)
+
+
     @timed_state(duration=1, next_state="backAfterPush")
     def pushGear(self):
         self.gearDrop.set(False)
-        self.drive.mecanumDrive_Cartesian(0,-1,0,.23)
-        
-    @timed_state(duration=1, next_state="onWards")
+        self.drive.mecanumDrive_Cartesian(0,-.23, self.rotation, 0)
+
+    @timed_state(duration=1, next_state="stop")
     def backAfterPush(self):
         self.gearDrop.set(False)
-        self.drive.mecanumDrive_Cartesian(0,1,0,.3)
+        self.drive.mecanumDrive_Cartesian(0,.3, self.rotation, 0)
 
-
-
-    @timed_state(duration=2, next_state="stop")
-    def onWards(self):
-        self.gearDrop.set(False)
-        self.drive.mecanumDrive_Cartesian(0,-1,0,.5)
-   
     @state()
     def stop(self):
-        self.drive.mecanumDrive_Cartesian(0,0,0,0)
+        self.drive.mecanumDrive_Cartesian(0,0, self.rotation, 0)
         self.turnController.disable()
-
