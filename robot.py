@@ -39,10 +39,7 @@ class MyRobot(wpilib.IterativeRobot):
             self.RRC = wpilib.Talon(self.rRightChannel)
 
 
-        wpilib.CameraServer.launch() #Goto 10.44.80.2:1181 to view the cameras without HTML page
-
-
-        self.robotDrive = wpilib.RobotDrive(self.RLC, self.FLC, self.FRC, self.RRC)#Sets motors for robotDrive commands
+        self.robotDrive = wpilib.RobotDrive(self.RLC, self.RRC, self.FRC, self.RLC)#Sets motors for robotDrive commands
         self.robotDrive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, True)
         self.robotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, True)
 
@@ -132,7 +129,8 @@ if __name__ == '__main__':
         #self.closeGear = wpilib.buttons.JoystickButton(self.controller, 4)
     
         #self.dm = 1
-        
+        #wpilib.CameraServer.launch() #Goto 10.44.80.2:1181 to view the cameras without HTML page
+
 
     def updater(self):
         #   self.robotStats.putBoolean('GEAR', self.switch.get())
